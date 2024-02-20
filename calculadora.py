@@ -1,44 +1,53 @@
 import re
 
 def realizar_operaciones(expresion):
-    operaciones = {
-        '+': lambda x, y: x + y,
-        '-': lambda x, y: x - y,
-        '*': lambda x, y: x * y,
-        '/': lambda x, y: x / y,
-        '^': lambda x, y: x ** y
-    }
+    try:
+        operaciones = {
+            '+': lambda x, y: x + y,
+            '-': lambda x, y: x - y,
+            '*': lambda x, y: x * y,
+            '/': lambda x, y: x / y,
+            '^': lambda x, y: x ** y
+        }
 
-    numeros = re.findall(r'\d+\.?\d*', expresion)
-    operadores = re.findall(r'[\+\-\*\/\^]', expresion)
+        numeros = re.findall(r'\d+\.?\d*', expresion)
+        operadores = re.findall(r'[\+\-\*\/\^]', expresion)
 
-    if not numeros or not operadores:
-        print("Error: Expresión matemática inválida.")
-        return None
+        if not numeros or not operadores:
+            raise ValueError("Expresión matemática inválida.")
 
-    resultado = float(numeros[0])
-    for i in range(1, len(numeros)):
-        operador = operadores[i - 1]
-        numero = float(numeros[i])
-        resultado = operaciones[operador](resultado, numero)
+        resultado = float(numeros[0])
+        for i in range(1, len(numeros)):
+            operador = operadores[i - 1]
+            numero = float(numeros[i])
+            resultado = operaciones[operador](resultado, numero)
 
-    return resultado
+        return resultado
+    
+    except ZeroDivisionError:
+        raise ZeroDivisionError("No se puede dividir entre cero.")
+    except Exception as e:
+        raise ValueError(str(e))
 
 def evaluar_expresion(expresion):
     expresion = expresion.replace(' ', '')  
-    parentesis_regex = re.compile(r'\([^()]+\)')
     while '(' in expresion:
-        subexpresion = parentesis_regex.search(expresion).group()
-        resultado_subexpresion = realizar_operaciones(subexpresion[1:-1])
-        expresion = expresion.replace(subexpresion, str(resultado_subexpresion))
+        parentesis_regex = re.compile(r'\(([^()]*)\)')
+        subexpresion = parentesis_regex.search(expresion).group(1)
+        resultado_subexpresion = realizar_operaciones(subexpresion)
+        expresion = expresion.replace(f'({subexpresion})', str(resultado_subexpresion))
     return realizar_operaciones(expresion)
 
 def main():
     while True:
         expresion = input('Ingrese la expresión matemática: ')
-        resultado = evaluar_expresion(expresion)
-        if resultado is not None:
+        try:
+            resultado = evaluar_expresion(expresion)
             print("El resultado de la operación es:", resultado)
+        except ValueError as ve:
+            print(f"Error: {ve}")
+        except ZeroDivisionError as zde:
+            print(f"Error: {zde}")
 
         continuar = input("¿Desea realizar otra operación? (s/n): ")
         if continuar.lower() != 's':
@@ -46,4 +55,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
