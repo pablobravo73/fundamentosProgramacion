@@ -3,13 +3,12 @@ import re
 variables = {}
 
 def asignar_variable(expresion):
-    variable, valor_expresion = expresion.split('=')
-    valor = evaluar_expresion(valor_expresion)
-    variables[variable.strip()] = valor
+    variable, valor = expresion.split('=')
+    variables[variable.strip()] = float(valor.strip())
 
 def realizar_operaciones(expresion):
     try:
-        
+        # Buscar y reemplazar variables por su valor
         for var in variables:
             expresion = expresion.replace(var, str(variables[var]))
         
@@ -89,3 +88,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
