@@ -1,7 +1,13 @@
-import re
+# import re
+
+variables = {}
 
 def realizar_operaciones(expresion):
     try:
+        # Buscar y reemplazar variables por su valor
+        for var in variables:
+            expresion = expresion.replace(var, str(variables[var]))
+        
         operaciones = {
             '+': lambda x, y: x + y,
             '-': lambda x, y: x - y,
@@ -39,19 +45,56 @@ def evaluar_expresion(expresion):
     return realizar_operaciones(expresion)
 
 def main():
-    while True:
-        expresion = input('Ingrese la expresión matemática: ')
-        try:
-            resultado = evaluar_expresion(expresion)
-            print("El resultado de la operación es:", resultado)
-        except ValueError as ve:
-            print(f"Error: {ve}")
-        except ZeroDivisionError as zde:
-            print(f"Error: {zde}")
+    usar_variables = input("¿Planea utilizar variables? (s/n): ")
+    if usar_variables.lower() == 's':
+        while True:
+            entrada = input('Ingrese la asignación de variable (variable = valor): ')
+            variable, valor_expresion = entrada.split('=')
+            variable = variable.strip()
+            valor = valor_expresion.strip()
+            
+            if re.match(r'^-?\d+(\.\d+)?$', variable):
+                print("El nombre de la variable no puede ser un número.")
+                continue
+            
+            try:
+                valor = evaluar_expresion(valor)
+                variables[variable] = valor
+            except ValueError as ve:
+                print(f"Error: {ve}")
+                continue
+                
+            continuar = input("¿Desea ingresar otra variable? (s/n): ")
+            if continuar.lower() != 's':
+                break
+        
+        while True:
+            expresion = input('Ingrese la expresión matemática: ')
+            try:
+                resultado = evaluar_expresion(expresion)
+                print("El resultado de la operación es:", resultado)
+            except ValueError as ve:
+                print(f"Error: {ve}")
+            except ZeroDivisionError as zde:
+                print(f"Error: {zde}")
 
-        continuar = input("¿Desea realizar otra operación? (s/n): ")
-        if continuar.lower() != 's':
-            break
+            continuar = input("¿Desea realizar otra operación? (s/n): ")
+            if continuar.lower() != 's':
+                break
+    else:
+        while True:
+            expresion = input('Ingrese la expresión matemática: ')
+            try:
+                resultado = evaluar_expresion(expresion)
+                print("El resultado de la operación es:", resultado)
+            except ValueError as ve:
+                print(f"Error: {ve}")
+            except ZeroDivisionError as zde:
+                print(f"Error: {zde}")
+
+            continuar = input("¿Desea realizar otra operación? (s/n): ")
+            if continuar.lower() != 's':
+                break
 
 if __name__ == "__main__":
     main()
