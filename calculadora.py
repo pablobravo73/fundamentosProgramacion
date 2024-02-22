@@ -1,10 +1,15 @@
-# import re
+import re
 
 variables = {}
 
+def asignar_variable(expresion):
+    variable, valor_expresion = expresion.split('=')
+    valor = evaluar_expresion(valor_expresion)
+    variables[variable.strip()] = valor
+
 def realizar_operaciones(expresion):
     try:
-        # Buscar y reemplazar variables por su valor
+        
         for var in variables:
             expresion = expresion.replace(var, str(variables[var]))
         
@@ -49,21 +54,7 @@ def main():
     if usar_variables.lower() == 's':
         while True:
             entrada = input('Ingrese la asignación de variable (variable = valor): ')
-            variable, valor_expresion = entrada.split('=')
-            variable = variable.strip()
-            valor = valor_expresion.strip()
-            
-            if re.match(r'^-?\d+(\.\d+)?$', variable):
-                print("El nombre de la variable no puede ser un número.")
-                continue
-            
-            try:
-                valor = evaluar_expresion(valor)
-                variables[variable] = valor
-            except ValueError as ve:
-                print(f"Error: {ve}")
-                continue
-                
+            asignar_variable(entrada)
             continuar = input("¿Desea ingresar otra variable? (s/n): ")
             if continuar.lower() != 's':
                 break
