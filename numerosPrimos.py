@@ -28,6 +28,9 @@ def requireNumbers():
 
     if min_value is not None and max_value is not None:
         return numerosPrimos(min_value, max_value)
+    elif min_value > max_value:
+        return None
+
     else:
         return None
 
