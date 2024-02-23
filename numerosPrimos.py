@@ -1,10 +1,10 @@
 def validateNumber(num):
     try:
-        num = int(num)
-        if num >= 0:
+        num = float(num)
+        if num >= 1:
             return num
         else:
-            print(f'{num} no es válido, ingrese un número válido.')
+            print(f'{num} no es válido, ingrese un número válido mayor o igual a 1.')
             return None
     except ValueError:
         print(f'{num} no es un número válido.')
@@ -13,7 +13,7 @@ def validateNumber(num):
     
 def numerosPrimos(min_value, max_value):
     ListNumbers=[]
-    for i in range(min_value, max_value + 1):
+    for i in range(int(min_value), int(max_value) + 1):
         if i > 1:
             for j in range(2, i):
                 if i % j == 0:
@@ -28,9 +28,9 @@ def requireNumbers():
 
     if min_value is not None and max_value is not None:
         return numerosPrimos(min_value, max_value)
-    elif min_value > max_value:
+    elif min_value is not None and max_value is not None and min_value > max_value:
+        print("El número menor del rango debe ser menor o igual al número mayor del rango.")
         return None
-
     else:
         return None
 
