@@ -8,7 +8,7 @@ def asignar_variable(expresion):
 
 def realizar_operaciones(expresion):
     try:
-        # Buscar y reemplazar variables por su valor
+        
         for var in variables:
             expresion = expresion.replace(var, str(variables[var]))
         
